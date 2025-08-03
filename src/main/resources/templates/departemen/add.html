@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
+    </head>
+    <body>
+
+        <!-- Pakai layout langsung, dan hanya bawa title dan pageTitle -->
+        <div th:replace="fragments/layout :: layout ('Departemen', 'Departemen')">
+            <!-- isi layout akan otomatis include fragment bernama "content" di halaman ini -->
+            <div th:fragment="content">
+                <div class="wrapper">
+                    <div class="container mt-5">
+                        <h3>Tambah Departemen Baru</h3>
+
+                        <form th:action="@{/departemen/save}" method="post" th:object="${departemen}">
+                            <div class="form-group">
+                                <label>Nama Departemen</label>
+                                <input type="text" th:field="*{namaDepartemen}" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Code Dept</label>
+                                <input type="text" th:field="*{codeDept}" class="form-control" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <a th:href="@{/departemen/index}" class="btn btn-secondary">Batal</a>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>

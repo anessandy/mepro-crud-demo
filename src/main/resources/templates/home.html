@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
+    </head>
+    <body>
+
+        <!-- Pakai layout langsung, dan hanya bawa title dan pageTitle -->
+        <div th:replace="fragments/layout :: layout ('Dashboard', 'Dashboard')">
+            <!-- isi layout akan otomatis include fragment bernama "content" di halaman ini -->
+            <div th:fragment="content">
+                <div class="row">
+                    <!-- box-box seperti sebelumnya -->
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>150</h3>
+                                <p>New Orders</p>
+                            </div>
+                            <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ...lanjutan box lainnya -->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

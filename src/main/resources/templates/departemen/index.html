@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
+    </head>
+    <body>
+
+        <!-- Pakai layout langsung, dan hanya bawa title dan pageTitle -->
+        <div th:replace="fragments/layout :: layout ('Dashboard', 'Dashboard')">
+            <!-- isi layout akan otomatis include fragment bernama "content" di halaman ini -->
+            <div th:fragment="content">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">List Departemen</h3>
+                        <a th:href="@{/departemen/add}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Tambah Departemen
+                        </a>
+                    </div>
+                    <div class="wrapper">
+                    <div class="container mt-5">
+                        <form th:action="@{/departemen/index}" method="get" >
+                            <div class="form-group">
+                                <label>Code Dept</label>
+                                <input type="text" class="form-control" name="kode" th:value="${kode}">
+                            </div>
+                            <div class="form-group">
+                                <label>Nama Departemen</label>
+                                <input type="text" class="form-control" name="nama" th:value="${nama}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                    </div>
+                </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama</th>
+                                    <th>Kode</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="d : ${listDepartemen}">
+                                    <td th:text="${d.idDepartemen}">1</td>
+                                    <td th:text="${d.namaDepartemen}">IT</td>
+                                    <td th:text="${d.codeDept}">IT001</td>
+                                    <td th:text="${d.status}">ACTIVE</td>
+                                    <td>
+                                        <a th:href="@{'/departemen/edit?id=' + ${d.idDepartemen}}" class="btn btn-sm btn-warning">Edit</a>
+                                        <a th:href="@{'/departemen/delete?id=' + ${d.idDepartemen}}"
+                                           onclick="return confirm('Yakin ingin menghapus?')"
+                                           class="btn btn-sm btn-danger">Hapus</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
