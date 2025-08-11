@@ -1,7 +1,7 @@
 package com.mepro.democrud.service;
 
 import com.mepro.democrud.dto.UserInfoDto;
-import com.mepro.democrud.repository.LoginRepository;
+import com.mepro.democrud.dao.LoginDao;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class LoginService {
     
     @Autowired
-    private LoginRepository loginRepository;
+    private LoginDao loginRepository;
     
     public Optional<UserInfoDto> login(String userId, String password) throws Exception {
         List<UserInfoDto> results = loginRepository.getListUserInfo(userId, password);

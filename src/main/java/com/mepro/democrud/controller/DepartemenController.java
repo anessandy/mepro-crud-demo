@@ -1,5 +1,7 @@
 package com.mepro.democrud.controller;
 
+import com.mepro.democrud.dao.DepartemenDao;
+import com.mepro.democrud.dto.DepartemenDto;
 import com.mepro.democrud.entity.Departemen;
 import com.mepro.democrud.service.DepartemenService;
 import com.mepro.democrud.types.ActiveStatus;
@@ -9,9 +11,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,27 +25,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/departemen")
 public class DepartemenController {
+    private static final Logger logger = LoggerFactory.getLogger(DepartemenController.class);
     
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private DepartemenService departemenService;
     
-    @GetMapping("/index")
-    public String list(@RequestParam(name = "kode", required = false) String kode, 
-            @RequestParam(name = "nama", required = false) String nama, Model model) {
-        logger.info("index departemen");
-        List<Departemen> list = departemenService.searchDepartemen(kode, nama);
-        model.addAttribute("listDepartemen", list);
-        model.addAttribute("kode", kode);
-        model.addAttribute("nama", nama);
-        return "departemen/index";
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
     
-    /*@GetMapping("/add")
-    public String add(Model model) {
-        model.addAttribute("departemen", new DepartemenDto());
-        return "departemen/add";
-    }*/
+    @GetMapping("/index")
+    public String index(@RequestParam(name = "kode", required = false) String kode, 
+            @RequestParam(name = "nama", required = false) String nama, Model model) {
+        logger.info("index departemen");
+        try {
+            List<DepartemenDto> listDepartemen = departemenService.getListDepartemen(null, kode, nama);
+            model.addAttribute("listDepartemen", listDepartemen);
+            model.addAttribute("kode", kode);
+            model.addAttribute("nama", nama);
+        } 
+        catch (Exception e) {
+            logger.error("Error : "+ e.getMessage());
+        }
+        
+        return "departemen/index";
+    }
     
     @GetMapping("/form")
     public String form(@RequestParam(required = false) Long id, Model model) {

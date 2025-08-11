@@ -1,6 +1,5 @@
-package com.mepro.democrud.repository;
+package com.mepro.democrud.dao;
 
-import com.mepro.democrud.controller.LoginController;
 import com.mepro.democrud.dto.UserInfoDto;
 import com.mepro.democrud.types.ActiveStatus;
 import com.mepro.democrud.util.SecurityUtil;
@@ -18,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class LoginRepository {
-    private static final Logger logger = LoggerFactory.getLogger(LoginRepository.class);
+public class LoginDao {
+    private static final Logger logger = LoggerFactory.getLogger(LoginDao.class);
     
     @PersistenceContext
     private EntityManager entityManager;

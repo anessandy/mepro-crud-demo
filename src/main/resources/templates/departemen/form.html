@@ -8,12 +8,12 @@
     <body>
 
         <!-- Pakai layout langsung, dan hanya bawa title dan pageTitle -->
-        <div th:replace="fragments/layout :: layout ('Departemen', 'Departemen')">
+        <div th:replace="fragments/layout :: layout (${title}, 'Departemen')">
             <!-- isi layout akan otomatis include fragment bernama "content" di halaman ini -->
             <div th:fragment="content">
                 <div class="wrapper">
                     <div class="container mt-5">
-                        <h3>Tambah Departemen Baru</h3>
+                        <h3 th:text="${title}">Default Text</h3>
 
                         <form th:action="@{${mode == 'EDIT'} ? '/departemen/update' : '/departemen/save'}" method="post" th:object="${departemen}">
                             <div class="form-group">

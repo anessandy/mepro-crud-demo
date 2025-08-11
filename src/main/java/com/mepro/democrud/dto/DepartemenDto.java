@@ -15,4 +15,5 @@ public class DepartemenDto {
     private Long idDepartemen;
     private String namaDepartemen;
     private String codeDept;
+    private String status;
 }

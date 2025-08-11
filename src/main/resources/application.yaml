@@ -27,6 +27,13 @@ spring:
       add-mappings: true
   
 server:
+  tomcat:
+    threads:
+      min-spare: 10
+      max: 200
+    accept-count: 100
+    max-connections: 10000
+  connection-timeout: 5s
   servlet:
     context-path: /appDemo
     session:
@@ -37,3 +44,11 @@ logging:
   level:
     com.zaxxer.hikari.HikariConfig: DEBUG
     com.zaxxer.hikari: TRACE
+    root: INFO
+    org.springframework.web: WARN
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,7 +1,7 @@
 package com.mepro.democrud.provider;
 
 import com.mepro.democrud.dto.UserInfoDto;
-import com.mepro.democrud.repository.LoginRepository;
+import com.mepro.democrud.dao.LoginDao;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    private LoginRepository loginRepository;
+    private LoginDao loginRepository;
     
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

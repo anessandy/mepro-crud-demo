@@ -1,7 +1,7 @@
 package com.mepro.democrud.service;
 
 import com.mepro.democrud.dto.UserInfoDto;
-import com.mepro.democrud.repository.LoginRepository;
+import com.mepro.democrud.dao.LoginDao;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserLoginService implements UserDetailsService {
     @Autowired
-    private LoginRepository loginRepository;
+    private LoginDao loginRepository;
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

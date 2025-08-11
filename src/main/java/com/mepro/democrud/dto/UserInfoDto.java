@@ -7,11 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoDto {
+
+    public UserInfoDto(Long nik, String namaLengkap) {
+        this.nik = nik;
+        this.namaLengkap = namaLengkap;
+    }
+    
     private Long nik;
     private String namaLengkap;
     private String userId;
