@@ -9,5 +9,7 @@ public interface SubDepartemenService {
     List<SubDepartemen> findAll();
     Optional<SubDepartemen> findById(Long id);
     List<SubDepartemenDto> getListSubDepartemen(Long subdepId, Long idDepartemen, String subdepName);
-    
+    SubDepartemen save(SubDepartemen subDepartemen);
+    void update(SubDepartemen subDepartemen);
+    void updatedDeleteById(Long id, String updatedBy);
 }

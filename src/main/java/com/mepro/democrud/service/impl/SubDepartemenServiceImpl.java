@@ -5,7 +5,9 @@ import com.mepro.democrud.dto.SubDepartemenDto;
 import com.mepro.democrud.entity.SubDepartemen;
 import com.mepro.democrud.repository.SubDepartemenRepository;
 import com.mepro.democrud.service.SubDepartemenService;
+import com.mepro.democrud.types.ActiveStatus;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -43,5 +45,31 @@ public class SubDepartemenServiceImpl implements SubDepartemenService {
             logger.error("error on : " + e.getMessage());
         }
         return listSubDepartemen;
+    }
+    
+    @Override
+    public SubDepartemen save(SubDepartemen subDepartemen) {
+        return subDepartemenRepository.save(subDepartemen);
+    }
+    
+    @Override
+    public void update(SubDepartemen subDepartemen) {
+        SubDepartemen existing = subDepartemenRepository.findById(subDepartemen.getSubdepId()).orElseThrow();
+        existing.setSubdepName(subDepartemen.getSubdepName());
+        existing.setIdDepartemen(subDepartemen.getIdDepartemen());
+        existing.setStatus(ActiveStatus.ACTIVE.getCode());
+        subDepartemenRepository.save(existing);
+    }
+    
+    @Override
+    public void updatedDeleteById(Long id, String updatedBy) {
+        Optional<SubDepartemen> opt = subDepartemenRepository.findById(id);
+        if (opt.isPresent()) {
+            SubDepartemen subdep = opt.get();
+            subdep.setStatus(ActiveStatus.INACTIVE.getCode());
+            subdep.setUpdatedBy(updatedBy);
+            subdep.setDateUpdated(new Date());
+            subDepartemenRepository.save(subdep);
+        }
     }
 }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2/css/select2.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
+    </head>
+    <body>
+
+        <!-- Pakai layout langsung, dan hanya bawa title dan pageTitle -->
+        <div th:replace="fragments/layout :: layout (${title}, 'Sub Departemen')">
+            <!-- isi layout akan otomatis include fragment bernama "content" di halaman ini -->
+            <div th:fragment="content">
+                <div class="wrapper">
+                    <div class="container mt-5">
+                        <h3 th:text="${title}">Default Text</h3>
+
+                        <form th:action="@{${mode == 'EDIT'} ? '/subdepartemen/update' : '/subdepartemen/save'}" method="post" th:object="${subdepartemen}">
+                            <div class="form-group">
+                                <label>Nama Sub Departemen</label>
+                                <input type="text" th:field="*{subdepName}" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label>Nama Departemen</label>
+                                <select id="departemenSelect" th:field="*{idDepartemen}" name="idDepartemen" class="form-control select2" style="width:100%">
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <a th:href="@{/subdepartemen/index}" class="btn btn-secondary">Batal</a>
+                            <input type="hidden" th:if="${mode == 'EDIT'}" th:field="*{subdepId}">
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script th:src="@{/adminlte/plugins/jquery/jquery.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/select2/js/select2.full.min.js}"></script>
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                $('#departemenSelect').select2({
+                    placeholder: 'Pilih atau Cari Departemen',
+                    allowClear: true,
+                    ajax: {
+                        url: /*[[@{/subdepartemen/listDepartemen}]]*/,
+                        dataType: 'json',
+                        delay: 250,
+                        processResults: function (data) {
+                            return {results: data};
+                        }
+                    }
+                });
+
+                var selectedKode = /*[[${idDepartemen}]]*/ '';
+                var selectedNama = /*[[${namaDepartemenSelected}]]*/ '';
+                
+                if (selectedKode) {
+                    //var option = new Option(selectedNama, selectedKode, true, true);
+                    //$('#departemenSelect').append(option).trigger('change');
+                    $('#departemenSelect').append(new Option(selectedNama, selectedKode, false, false));
+                    $('#departemenSelect').val(selectedKode).trigger('change'); 
+                }
+            });
+        </script>
+    </body>
+</html>

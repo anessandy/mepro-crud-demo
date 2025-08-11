@@ -50,7 +50,7 @@ public class SubDepartemenDao implements Serializable {
             sql += "AND tb2.iddepartemen = "+idDepartemen+" ";
         }
         if (subdepName != null) {
-            sql += "AND LOWER(tb1.subdep_name) = "+subdepName.toLowerCase()+" ";
+            sql += "AND LOWER(tb1.subdep_name) LIKE '%"+subdepName.toLowerCase()+"%' ";
         }
         NativeQuery<Object[]> query = session.createNativeQuery(sql, Object[].class);
         query.addScalar("subdepid", StandardBasicTypes.LONG);

@@ -17,22 +17,21 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="card-title">List Sub Departemen</h3>
-                        <a th:href="@{/departemen/add}" class="btn btn-sm btn-primary">
+                        <a th:href="@{/subdepartemen/add}" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus"></i> Tambah Sub Departemen
                         </a>
                     </div>
                     <div class="wrapper">
                         <div class="container mt-5">
-                            <form th:action="@{/subdepartemen/index}" method="get" >
+                            <form th:action="@{/subdepartemen/search}" method="get" >
                                 <div class="form-group">
                                     <label>Departemen</label>
                                     <select id="departemenSelect" name="idDepartemen" class="form-control select2" style="width:100%">
-                                        <!-- opsi akan di-load via JS -->
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Nama Sub Departemen</label>
-                                    <input type="text" class="form-control" name="subdepName" th:value="${nama}">
+                                    <input type="text" class="form-control" name="subdepName" th:value="${subdepName}">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Search</button>
                             </form>
@@ -54,8 +53,8 @@
                                     <td th:text="${d.subdepName}"></td>
                                     <td th:text="${d.namaDepartemen}"></td>
                                     <td>
-                                        <a th:href="@{'/departemen/edit?id=' + ${d.idDepartemen}}" class="btn btn-sm btn-warning">Edit</a>
-                                        <a th:href="@{'/departemen/delete?id=' + ${d.idDepartemen}}"
+                                        <a th:href="@{'/subdepartemen/edit?id=' + ${d.subdepId}}" class="btn btn-sm btn-warning">Edit</a>
+                                        <a th:href="@{'/subdepartemen/delete?id=' + ${d.subdepId}}"
                                            onclick="return confirm('Yakin ingin menghapus?')"
                                            class="btn btn-sm btn-danger">Hapus</a>
                                     </td>
@@ -87,9 +86,13 @@
                 });
 
                 var selectedKode = /*[[${idDepartemen}]]*/ '';
+                var selectedNama = /*[[${namaDepartemenSelected}]]*/ '';
+                
                 if (selectedKode) {
-                    var option = new Option(selectedKode, selectedKode, true, true);
-                    $('#departemenSelect').append(option).trigger('change');
+                    //var option = new Option(selectedNama, selectedKode, true, true);
+                    //$('#departemenSelect').append(option).trigger('change');
+                    $('#departemenSelect').append(new Option(selectedNama, selectedKode, false, false));
+                    $('#departemenSelect').val(selectedKode).trigger('change'); 
                 }
             });
         </script>
