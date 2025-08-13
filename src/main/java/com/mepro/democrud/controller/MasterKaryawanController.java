@@ -51,33 +51,6 @@ public class MasterKaryawanController implements Serializable {
         return "masterkaryawan/index";
     }
 
-    @GetMapping("/search")
-    public String search(Model model,
-            @RequestParam(name = "nik", required = false) Long nik,
-            @RequestParam(name = "namaLengkap", required = false) String namaLengkap,
-            @RequestParam(name = "tglMulaiKerja", required = false) String tglMulaiKerja,
-            @RequestParam(name = "idDepartemen", required = false) Long idDepartemen,
-            @RequestParam(name = "subdepId", required = false) Long subdepId) {
-        logger.info("search sub departemen");
-        model.addAttribute("nik", nik);
-        model.addAttribute("namaLengkap", namaLengkap);
-        model.addAttribute("tglMulaiKerja", tglMulaiKerja);
-        model.addAttribute("idDepartemen", idDepartemen);
-        model.addAttribute("subdepId", subdepId);
-
-        if (idDepartemen != null) {
-            model.addAttribute("namaDepartemenSelected", departemenService.findById(idDepartemen).get().getNamaDepartemen());
-        }
-
-        if (subdepId != null) {
-            model.addAttribute("namaSubDepartemenSelected", subDepartemenService.findById(subdepId).get().getSubdepName());
-        }
-
-        List<MasterKaryawanDto> listMasterKaryawan = masterKaryawanService.getListMasterKaryawan(nik, idDepartemen, subdepId, tglMulaiKerja, namaLengkap);
-        model.addAttribute("listMasterKaryawan", listMasterKaryawan);
-        return "masterkaryawan/index";
-    }
-
     @GetMapping("/listDepartemen")
     @ResponseBody
     public List<Map<String, String>> listDepartemen(@RequestParam(value = "q", required = false) String query) {
@@ -89,6 +62,12 @@ public class MasterKaryawanController implements Serializable {
         } else {
             list = departemenService.listAllDepartemen(ActiveStatus.ACTIVE.getCode());
         }
+        
+        Departemen allOption = new Departemen();
+        allOption.setIdDepartemen(-1L);
+        allOption.setNamaDepartemen("");
+        list.add(0, allOption);
+        
         return list.stream()
                 .map(d -> Map.of(
                 "id", String.valueOf(d.getIdDepartemen()),
@@ -108,11 +87,76 @@ public class MasterKaryawanController implements Serializable {
         } else {
             list = subDepartemenService.listAllSubDepartemen(ActiveStatus.ACTIVE.getCode());
         }
+        
+        SubDepartemen allOption = new SubDepartemen();
+        allOption.setSubdepId(-1L);
+        allOption.setSubdepName("");
+        list.add(0, allOption);
+        
         return list.stream()
                 .map(d -> Map.of(
                 "id", String.valueOf(d.getSubdepId()),
                 "text", d.getSubdepName()
         ))
                 .toList();
+    }
+    
+    @GetMapping("/search")
+    @ResponseBody
+    public List<MasterKaryawanDto> getListMasterKaryawan(Model model,
+            @RequestParam(name = "nik", required = false) Long nik,
+            @RequestParam(name = "namaLengkap", required = false) String namaLengkap,
+            @RequestParam(name = "tglMulaiKerja", required = false) String tglMulaiKerja,
+            @RequestParam(name = "idDepartemen", required = false) String idDepartemen,
+            @RequestParam(name = "subdepId", required = false) String subdepId) {
+        
+        logger.info("search sub departemen");
+        model.addAttribute("nik", nik);
+        model.addAttribute("namaLengkap", namaLengkap);
+        model.addAttribute("tglMulaiKerja", tglMulaiKerja);
+        model.addAttribute("idDepartemen", idDepartemen);
+        model.addAttribute("subdepId", subdepId);
+        
+        Long lIdDepartemen = null;
+        if (idDepartemen == null || idDepartemen.equalsIgnoreCase("-1")) {
+            lIdDepartemen = -1L;
+            model.addAttribute("namaDepartemenSelected","All");
+        }
+        else {
+            if (idDepartemen.equals("null")) {
+                lIdDepartemen = -1L;
+                model.addAttribute("namaDepartemenSelected","All");
+            }
+            else {
+                lIdDepartemen = Long.valueOf(idDepartemen);
+                model.addAttribute("namaDepartemenSelected", departemenService.findById(lIdDepartemen).orElseThrow().getNamaDepartemen());
+            }
+        }
+        
+        Long lSubdepId = null;
+        if (subdepId == null || subdepId.equalsIgnoreCase("-1")) {
+            lSubdepId = -1L;
+            model.addAttribute("namaSubDepartemenSelected","All");
+        }
+        else {
+            if (subdepId.equalsIgnoreCase("null")) {
+                lSubdepId = -1L;
+                model.addAttribute("namaSubDepartemenSelected","All");  
+            }
+            else {
+                lSubdepId = Long.valueOf(subdepId);
+                model.addAttribute("namaSubDepartemenSelected", subDepartemenService.findById(lSubdepId).orElseThrow().getSubdepName());
+            }
+        }
+
+        List<MasterKaryawanDto> listMasterKaryawan = masterKaryawanService.getListMasterKaryawan(nik, lIdDepartemen, lSubdepId, tglMulaiKerja, namaLengkap);
+        model.addAttribute("listMasterKaryawan", listMasterKaryawan);
+        
+        return listMasterKaryawan;
+    }
+    
+    @GetMapping("/masterkaryawan")
+    public String indexPage() {
+        return "masterkaryawan/index"; // ini HTML
     }
 }

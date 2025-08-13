@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mepro.democrud.dao;
 
 import com.mepro.democrud.dto.MasterKaryawanDto;
@@ -48,10 +44,14 @@ public class MasterKaryawanDao {
             sql += "AND LOWER(tb1.namalengkap) LIKE '%"+namaLengkap.toLowerCase()+"%' ";
         }
         if (idDepartemen != null) {
-            sql += "AND tb1.iddepartemen = "+idDepartemen+" ";
+            if (idDepartemen != -1L) {
+                sql += "AND tb1.iddepartemen = "+idDepartemen+" ";
+            }
         }
         if (subdepId != null) {
-            sql += "AND tb1.subdep_id = "+subdepId+" ";
+            if (subdepId != -1L) {
+                sql += "AND tb1.subdep_id = "+subdepId+" ";
+            }
         }
         if (tglMulaiKerja != null) {
             String[] dates = DateRangeUtil.splitDateRange(tglMulaiKerja);

@@ -7,6 +7,8 @@
         <link rel="stylesheet" th:href="@{/adminlte/plugins/select2/css/select2.min.css}">
         <link rel="stylesheet" th:href="@{/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
         <link rel="stylesheet" th:href="@{/adminlte/plugins/daterangepicker/daterangepicker.css}">
+        <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">-->
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
         <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
     </head>
     <body>
@@ -24,11 +26,11 @@
                             <form th:action="@{/masterkaryawan/search}" method="get" >
                                 <div class="form-group">
                                     <label>NIK</label>
-                                    <input type="text" class="form-control" name="nik" th:value="${nik}">
+                                    <input type="text" class="form-control" id="nik" name="nik" th:value="${nik}">
                                 </div>
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
-                                    <input type="text" class="form-control" name="namaLengkap" th:value="${namaLengkap}">
+                                    <input type="text" class="form-control" id="namaLengkap" name="namaLengkap" th:value="${namaLengkap}">
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Mulai Kerja</label>
@@ -47,12 +49,12 @@
                                     <select id="subDepartemenSelect" name="subdepId" class="form-control select2" style="width:100%">
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="submit" id="btnSearch" class="btn btn-primary">Search</button>
                             </form>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="masterKaryawanTable">
                             <thead>
                                 <tr>
                                     <th>NIK</th>
@@ -81,59 +83,126 @@
         <script th:src="@{/adminlte/plugins/moment/moment.min.js}"></script>
         <script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
         <script th:src="@{/adminlte/plugins/select2/js/select2.full.min.js}"></script>
+        <!--<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>-->
+        <script th:src="@{/adminlte/plugins/datatables/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js}"></script>
         <script th:src="@{/adminlte/plugins/daterangepicker/daterangepicker.js}"></script>
         
         <script th:inline="javascript">
+            
             $(document).ready(function () {
                 $('#departemenSelect').select2({
                     placeholder: 'Pilih atau Cari Departemen',
                     allowClear: true,
+                    minimumInputLength: 0,
                     ajax: {
                         url: /*[[@{/masterkaryawan/listDepartemen}]]*/,
                         dataType: 'json',
                         delay: 250,
                         processResults: function (data) {
-                            return {results: data};
+                            console.log("Data dari server departemen", data);
+                            let list = [];
+                            list.push({ id: '-1', text: 'All' });
+                            data.forEach(function(item) {
+                                list.push(item);
+                            });
+                            return {
+                                results: list
+                            };
                         }
                     }
                 });
                 var selectedKodeDepartemen = /*[[${idDepartemen}]]*/ '';
                 var selectedNamaDepartemen = /*[[${namaDepartemenSelected}]]*/ '';
-                if (selectedKodeDepartemen) {
-                    $('#departemenSelect').append(new Option(selectedNamaDepartemen, selectedKodeDepartemen, false, false));
-                    $('#departemenSelect').val(selectedKodeDepartemen).trigger('change'); 
+                
+                if (!selectedKodeDepartemen) {
+                    selectedNamaDepartemen = 'All';
                 }
+                
+                $('#departemenSelect').append(
+                    new Option(selectedNamaDepartemen, selectedKodeDepartemen, true, true)
+                ).trigger('change');
             });
             
             $(document).ready(function () {
                 $('#subDepartemenSelect').select2({
                     placeholder: 'Pilih atau Cari Sub Departemen',
                     allowClear: true,
+                    minimumInputLength: 0,
                     ajax: {
                         url: /*[[@{/masterkaryawan/listSubDepartemen}]]*/,
                         dataType: 'json',
                         delay: 250,
                         processResults: function (data) {
-                            return {results: data};
+                            console.log("Data dari server sub departemen", data);
+                            let list = [];
+                            list.push({ id: '-1', text: 'All' });
+                            data.forEach(function(item) {
+                                list.push(item);
+                            });
+                            return {
+                                results: list
+                            };
                         }
                     }
                 });
                 
                 var selectedKodeSubDepartemen = /*[[${subdepId}]]*/ '';
                 var selectedNamaSubDepartemen = /*[[${namaSubDepartemenSelected}]]*/ '';
-                if (selectedKodeSubDepartemen) {
-                    $('#subDepartemenSelect').append(new Option(selectedNamaSubDepartemen, selectedKodeSubDepartemen, false, false));
-                    $('#subDepartemenSelect').val(selectedKodeSubDepartemen).trigger('change'); 
+                
+                if (!selectedKodeSubDepartemen) {
+                    selectedNamaSubDepartemen = 'All';
                 }
+                
+                $('#subDepartemenSelect').append(
+                    new Option(selectedNamaSubDepartemen, selectedKodeSubDepartemen, true, true)
+                ).trigger('change');
             });
             
             $(document).ready(function (){
                 $('#tglMulaiKerja').daterangepicker({
+                    autoUpdateInput: false,
                     locale: {
-                        format: 'DD-MM-YYYY'
+                        format: 'DD-MM-YYYY',
+                        cancelLabel: 'Clear'
                     }
+                }, function(start, end) {
+                    $('#tglMulaiKerja').val(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
                 });
             });
+            
+            $(document).ready(function () {
+                var table = $('#masterKaryawanTable').DataTable({
+                    processing: true,
+                    ajax: {
+                        url: /*[[@{/masterkaryawan/search}]]*/'',
+                        type: 'GET',
+                        dataSrc: '',
+                        data: function (d) {
+                            d.nik = $('#nik').val();
+                            d.namaLengkap = $('#namaLengkap').val();
+                            d.tglMulaiKerja = $('#tglMulaiKerja').val();
+                            d.idDepartemen = $('#departemenSelect').val();
+                            d.subdepId = $('#subDepartemenSelect').val();
+                        }
+                    },
+                    columns: [
+                        { data: 'nik' },
+                        { data: 'namaLengkap' },
+                        { data: 'tglMulaiKerja' },
+                        { data: 'namaDepartemen' },
+                        { data: 'subdepName' }
+                    ],
+                    pageLength: 10
+                });
+                
+                $('#btnSearch').on('click', function (e) {
+                    e.preventDefault();
+                    table.ajax.reload();
+                    //location.reload();
+                });
+            });
+            
         </script>
     </body>
 </html>
