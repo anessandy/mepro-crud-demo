@@ -72,4 +72,15 @@ public class SubDepartemenServiceImpl implements SubDepartemenService {
             subDepartemenRepository.save(subdep);
         }
     }
+    
+    // Add For Sub Departemen
+    @Override
+    public List<SubDepartemen> listAllSubDepartemen(String status) {
+        return subDepartemenRepository.listAllSubDepartemen(status);
+    }
+    
+    @Override
+    public List<SubDepartemen> searchByNama(String query) {
+        return subDepartemenRepository.searchByNama(query);
+    }
 }

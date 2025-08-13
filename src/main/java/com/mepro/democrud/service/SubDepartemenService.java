@@ -12,4 +12,6 @@ public interface SubDepartemenService {
     SubDepartemen save(SubDepartemen subDepartemen);
     void update(SubDepartemen subDepartemen);
     void updatedDeleteById(Long id, String updatedBy);
+    List<SubDepartemen> listAllSubDepartemen(String status);
+    List<SubDepartemen> searchByNama(String query);
 }

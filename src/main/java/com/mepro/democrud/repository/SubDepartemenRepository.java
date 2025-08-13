@@ -21,4 +21,12 @@ public interface SubDepartemenRepository extends JpaRepository<SubDepartemen, Lo
     List<SubDepartemen> findBySubdepNameContainingIgnoreCase(String subdepName);
     List<SubDepartemen> findByIdDepartemenAndSubdepNameContainingIgnoreCase(Long idDepartemen, String SubdepName);
     
+    @Query(value = "SELECT * FROM subdepartemen sd "
+            + "WHERE sd.status = :status", nativeQuery = true)
+    List<SubDepartemen> listAllSubDepartemen(@Param("status") String status);
+    
+    @Query("SELECT sd FROM SubDepartemen sd " +
+           "WHERE (:query IS NULL OR LOWER(sd.subdepName) LIKE LOWER(CONCAT('%', :query, '%')))")
+    List<SubDepartemen> searchByNama(@Param("query") String query);
+    
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2/css/select2.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/plugins/daterangepicker/daterangepicker.css}">
+        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
+    </head>
+    <body>
+
+        <!-- Pakai layout langsung, dan hanya bawa title dan pageTitle -->
+        <div th:replace="fragments/layout :: layout ('Master Karyawan', 'Master Karyawan')">
+            <!-- isi layout akan otomatis include fragment bernama "content" di halaman ini -->
+            <div th:fragment="content">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">List Master Karyawan</h3>
+                    </div>
+                    <div class="wrapper">
+                        <div class="container mt-5">
+                            <form th:action="@{/masterkaryawan/search}" method="get" >
+                                <div class="form-group">
+                                    <label>NIK</label>
+                                    <input type="text" class="form-control" name="nik" th:value="${nik}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Lengkap</label>
+                                    <input type="text" class="form-control" name="namaLengkap" th:value="${namaLengkap}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Mulai Kerja</label>
+                                    <input type="text" class="form-control" id="tglMulaiKerja" name="tglMulaiKerja"
+                                           th:value="${tglMulaiKerja}" placeholder="Pilih rentang tanggal">
+                                </div>
+                                <input type="hidden" name="startDate" id="startDate">
+                                <input type="hidden" name="endDate" id="endDate">
+                                <div class="form-group">
+                                    <label>Departemen</label>
+                                    <select id="departemenSelect" name="idDepartemen" class="form-control select2" style="width:100%">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sub Departemen</label>
+                                    <select id="subDepartemenSelect" name="subdepId" class="form-control select2" style="width:100%">
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>NIK</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Tanggal Mulai Kerja</th>
+                                    <th>Departemen</th>
+                                    <th>Sub Departemen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="d : ${listMasterKaryawan}">
+                                    <td th:text="${d.nik}"></td>
+                                    <td th:text="${d.namaLengkap}"></td>
+                                    <td th:text="${d.tglMulaiKerja}"></td>
+                                    <td th:text="${d.namaDepartemen}"></td>
+                                    <td th:text="${d.subdepName}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script th:src="@{/adminlte/plugins/jquery/jquery.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/moment/moment.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/select2/js/select2.full.min.js}"></script>
+        <script th:src="@{/adminlte/plugins/daterangepicker/daterangepicker.js}"></script>
+        
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                $('#departemenSelect').select2({
+                    placeholder: 'Pilih atau Cari Departemen',
+                    allowClear: true,
+                    ajax: {
+                        url: /*[[@{/masterkaryawan/listDepartemen}]]*/,
+                        dataType: 'json',
+                        delay: 250,
+                        processResults: function (data) {
+                            return {results: data};
+                        }
+                    }
+                });
+                var selectedKodeDepartemen = /*[[${idDepartemen}]]*/ '';
+                var selectedNamaDepartemen = /*[[${namaDepartemenSelected}]]*/ '';
+                if (selectedKodeDepartemen) {
+                    $('#departemenSelect').append(new Option(selectedNamaDepartemen, selectedKodeDepartemen, false, false));
+                    $('#departemenSelect').val(selectedKodeDepartemen).trigger('change'); 
+                }
+            });
+            
+            $(document).ready(function () {
+                $('#subDepartemenSelect').select2({
+                    placeholder: 'Pilih atau Cari Sub Departemen',
+                    allowClear: true,
+                    ajax: {
+                        url: /*[[@{/masterkaryawan/listSubDepartemen}]]*/,
+                        dataType: 'json',
+                        delay: 250,
+                        processResults: function (data) {
+                            return {results: data};
+                        }
+                    }
+                });
+                
+                var selectedKodeSubDepartemen = /*[[${subdepId}]]*/ '';
+                var selectedNamaSubDepartemen = /*[[${namaSubDepartemenSelected}]]*/ '';
+                if (selectedKodeSubDepartemen) {
+                    $('#subDepartemenSelect').append(new Option(selectedNamaSubDepartemen, selectedKodeSubDepartemen, false, false));
+                    $('#subDepartemenSelect').val(selectedKodeSubDepartemen).trigger('change'); 
+                }
+            });
+            
+            $(document).ready(function (){
+                $('#tglMulaiKerja').daterangepicker({
+                    locale: {
+                        format: 'DD-MM-YYYY'
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
