@@ -1,6 +1,7 @@
 package com.mepro.democrud.controller;
 
 import com.mepro.democrud.dto.MasterKaryawanDto;
+import com.mepro.democrud.dto.customs.Select2Item;
 import com.mepro.democrud.entity.Departemen;
 import com.mepro.democrud.entity.SubDepartemen;
 import com.mepro.democrud.service.DepartemenService;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -158,5 +160,11 @@ public class MasterKaryawanController implements Serializable {
     @GetMapping("/masterkaryawan")
     public String indexPage() {
         return "masterkaryawan/index"; // ini HTML
+    }
+    
+    @GetMapping("/getSubdepByDepartemen/{idDepartemen}")
+    @ResponseBody
+    public List<SubDepartemen> getSubdepByDepartemen(@PathVariable Long idDepartemen) {
+        return subDepartemenService.findByIdDepartemen(idDepartemen);
     }
 }

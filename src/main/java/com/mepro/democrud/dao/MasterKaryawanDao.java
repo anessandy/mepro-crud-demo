@@ -36,7 +36,8 @@ public class MasterKaryawanDao {
                 + "     LEFT JOIN departemen tb2 ON tb1.iddepartemen = tb2.iddepartemen "
                 + "     LEFT JOIN subdepartemen tb3 ON tb1.subdep_id = tb3.subdep_id "
                 + "WHERE "
-                + " tb1.status = :status ";
+                + " tb1.status = :status AND "
+                + " tb1.subdep_id != 0 ";
         if (nik != null) {
             sql += "AND tb1.nik = "+nik+" ";
         }
@@ -60,10 +61,12 @@ public class MasterKaryawanDao {
             logger.info("startDate : "+startDate);
             logger.info("enddate : "+endDate);
             sql += "AND (tglmulaikerja >= TO_DATE('"+startDate+"', '"+Constants.ORACLE_DATE_FORMAT+"') AND "
-                    + "tglmulaikerja <= TO_DATE('"+endDate+"', '"+Constants.ORACLE_DATE_FORMAT+"'))";
+                    + "tglmulaikerja <= TO_DATE('"+endDate+"', '"+Constants.ORACLE_DATE_FORMAT+"')) ";
         }
         
-        NativeQuery<Object[]> query = session.createNativeQuery(sql, Object[].class);
+        String sqlOrderBy = "ORDER BY tb1.namalengkap ";
+        
+        NativeQuery<Object[]> query = session.createNativeQuery(sql + sqlOrderBy, Object[].class);
         query.addScalar("nik", StandardBasicTypes.LONG);
         query.addScalar("namalengkap", StandardBasicTypes.STRING);
         query.addScalar("tglmulaikerja", StandardBasicTypes.STRING);

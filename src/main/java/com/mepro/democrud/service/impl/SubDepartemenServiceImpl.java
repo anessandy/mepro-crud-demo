@@ -31,6 +31,11 @@ public class SubDepartemenServiceImpl implements SubDepartemenService {
     }
     
     @Override
+    public List<SubDepartemen> findByIdDepartemen(Long idDepartemen) {
+        return subDepartemenRepository.findByIdDepartemen(idDepartemen);
+    }
+    
+    @Override
     public Optional<SubDepartemen> findById(Long id) {
         return subDepartemenRepository.findById(id);
     }

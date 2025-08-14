@@ -89,7 +89,7 @@
         <script th:src="@{/adminlte/plugins/daterangepicker/daterangepicker.js}"></script>
         
         <script th:inline="javascript">
-            let baseSubdepUrl = /*[[@{/masterkaryawan/getSubdepByDepartemen/}]]*/;
+            
             $(document).ready(function () {
                 $('#departemenSelect').select2({
                     placeholder: 'Pilih atau Cari Departemen',
@@ -122,45 +122,29 @@
                 $('#departemenSelect').append(
                     new Option(selectedNamaDepartemen, selectedKodeDepartemen, true, true)
                 ).trigger('change');
-        
-            });
-            
-            $(document).ready(function () {
-                $('#departemenSelect').on('change', function () {
-                    // Kosongkan sub departemen yang sedang dipilih
-                    $('#subDepartemenSelect').val(null).trigger('change');
-                });
             });
             
             $(document).ready(function () {
                 $('#subDepartemenSelect').select2({
                     placeholder: 'Pilih atau Cari Sub Departemen',
                     allowClear: true,
-                    minimumInputLength: 0
-                    
-                    // Ajaxnya dimatikan karena nilai bergantung dengan pilihan iddepartemen
-//                    ajax: {
-//                        url: function() {
-//                            let idDepartemen = $('#departemenSelect').val();
-//                            if (!idDepartemen || idDepartemen === '-1') {
-//                                return /*[[@{/masterkaryawan/listSubDepartemen}]]*/;
-//                            }
-//                            return /*[[@{/masterkaryawan/getSubdepByDepartemen/}]]*/ + idDepartemen;
-//                        },
-//                        dataType: 'json',
-//                        delay: 250,
-//                        processResults: function (data) {
-//                            console.log("Data dari server sub departemen", data);
-//                            let list = [];
-//                            list.push({ id: '-1', text: 'All' });
-//                            data.forEach(function(item) {
-//                                list.push(item);
-//                            });
-//                            return {
-//                                results: list
-//                            };
-//                        }
-//                    }
+                    minimumInputLength: 0,
+                    ajax: {
+                        url: /*[[@{/masterkaryawan/listSubDepartemen}]]*/,
+                        dataType: 'json',
+                        delay: 250,
+                        processResults: function (data) {
+                            console.log("Data dari server sub departemen", data);
+                            let list = [];
+                            list.push({ id: '-1', text: 'All' });
+                            data.forEach(function(item) {
+                                list.push(item);
+                            });
+                            return {
+                                results: list
+                            };
+                        }
+                    }
                 });
                 
                 var selectedKodeSubDepartemen = /*[[${subdepId}]]*/ '';
@@ -190,7 +174,6 @@
             $(document).ready(function () {
                 var table = $('#masterKaryawanTable').DataTable({
                     processing: true,
-                    ordering: false,
                     ajax: {
                         url: /*[[@{/masterkaryawan/search}]]*/'',
                         type: 'GET',
@@ -224,21 +207,17 @@
                 $('#departemenSelect').on('change', function () {
                     let idDepartemen = $(this).val();
                     let subdepSelect = $('#subDepartemenSelect');
-                    
-                    console.log("idDepartemen : "+idDepartemen);
-                    console.log("url : "+ baseSubdepUrl + idDepartemen);
-                    
+
                     subdepSelect.empty(); // hapus semua option
                     subdepSelect.append('<option value="">Pilih atau Cari Sub Departemen</option>');
-                    
+
                     if (idDepartemen) {
                         $.ajax({
-                            url: baseSubdepUrl + idDepartemen,
-                            
+                            url: /*[[@{/masterkaryawan/getSubdepByDepartemen/}]]*/ + idDepartemen,
                             type: 'GET',
                             success: function (data) {
                                 data.forEach(function (subdep) {
-                                    subdepSelect.append('<option value="' + subdep.subdepId + '">' + subdep.subdepName + '</option>');
+                                    subdepSelect.append('<option value="' + subdep.id + '">' + subdep.nama + '</option>');
                                 });
                             }
                         });
