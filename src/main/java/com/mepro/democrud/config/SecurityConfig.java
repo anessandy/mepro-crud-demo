@@ -35,6 +35,21 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
+            )
+            .sessionManagement(session -> 
+                session
+                    .maximumSessions(1) // hanya 1 session aktif
+                    .expiredUrl("/login?expired=true")
+            )
+            .headers(headers -> headers
+                .contentSecurityPolicy(csp -> csp.policyDirectives(
+                    "default-src 'self'; script-src 'self'; style-src 'self'"
+                ))
+                .frameOptions(frame -> frame.sameOrigin())
+                .contentTypeOptions(withDefaults -> {}) // default safe
+            )
+            .exceptionHandling(ex -> ex
+                .accessDeniedPage("/access-denied")
             );
         return http.build();
     }
