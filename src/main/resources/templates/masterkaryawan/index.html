@@ -50,6 +50,7 @@
                                     </select>
                                 </div>
                                 <button type="submit" id="btnSearch" class="btn btn-primary">Search</button>
+                                <button type="submit" th:formaction="@{/masterkaryawan/export}" id="btnExport" class="btn btn-success">Export Excel</button>
                             </form>
                         </div>
                     </div>
@@ -137,30 +138,6 @@
                     placeholder: 'Pilih atau Cari Sub Departemen',
                     allowClear: true,
                     minimumInputLength: 0
-                    
-                    // Ajaxnya dimatikan karena nilai bergantung dengan pilihan iddepartemen
-//                    ajax: {
-//                        url: function() {
-//                            let idDepartemen = $('#departemenSelect').val();
-//                            if (!idDepartemen || idDepartemen === '-1') {
-//                                return /*[[@{/masterkaryawan/listSubDepartemen}]]*/;
-//                            }
-//                            return /*[[@{/masterkaryawan/getSubdepByDepartemen/}]]*/ + idDepartemen;
-//                        },
-//                        dataType: 'json',
-//                        delay: 250,
-//                        processResults: function (data) {
-//                            console.log("Data dari server sub departemen", data);
-//                            let list = [];
-//                            list.push({ id: '-1', text: 'All' });
-//                            data.forEach(function(item) {
-//                                list.push(item);
-//                            });
-//                            return {
-//                                results: list
-//                            };
-//                        }
-//                    }
                 });
                 
                 var selectedKodeSubDepartemen = /*[[${subdepId}]]*/ '';

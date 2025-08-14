@@ -8,9 +8,14 @@ import com.mepro.democrud.service.DepartemenService;
 import com.mepro.democrud.service.MasterKaryawanService;
 import com.mepro.democrud.service.SubDepartemenService;
 import com.mepro.democrud.types.ActiveStatus;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,5 +171,82 @@ public class MasterKaryawanController implements Serializable {
     @ResponseBody
     public List<SubDepartemen> getSubdepByDepartemen(@PathVariable Long idDepartemen) {
         return subDepartemenService.findByIdDepartemen(idDepartemen);
+    }
+    
+    @GetMapping("/export")
+    public void exportToExcel(Model model,
+            @RequestParam(required = false) String nik,
+            @RequestParam(required = false) String namaLengkap,
+            @RequestParam(required = false) String tglMulaiKerja,
+            @RequestParam(required = false) String idDepartemen,
+            @RequestParam(required = false) String subdepId,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=karyawan.xlsx");
+        logger.info("nik : " + nik);
+        logger.info("namaLengkap : " + namaLengkap);
+        logger.info("tglMulaiKerja : " + tglMulaiKerja);
+        logger.info("idDepartemen : " + idDepartemen);
+        logger.info("subdepId : " + subdepId);
+        
+        Long lNik = (nik != null && !nik.isEmpty()) ? Long.valueOf(nik) : null;        
+        
+        Long lIdDepartemen = null;
+        if (idDepartemen == null || idDepartemen.equalsIgnoreCase("-1")) {
+            lIdDepartemen = -1L;
+            model.addAttribute("namaDepartemenSelected","All");
+        }
+        else {
+            if (idDepartemen.equals("null")) {
+                lIdDepartemen = -1L;
+                model.addAttribute("namaDepartemenSelected","All");
+            }
+            else {
+                lIdDepartemen = Long.valueOf(idDepartemen);
+                model.addAttribute("namaDepartemenSelected", departemenService.findById(lIdDepartemen).orElseThrow().getNamaDepartemen());
+            }
+        }
+        
+        Long lSubdepId = null;
+        if (subdepId == null || subdepId.equalsIgnoreCase("-1")) {
+            lSubdepId = -1L;
+            model.addAttribute("namaSubDepartemenSelected","All");
+        }
+        else {
+            if (subdepId.equalsIgnoreCase("null")) {
+                lSubdepId = -1L;
+                model.addAttribute("namaSubDepartemenSelected","All");  
+            }
+            else {
+                lSubdepId = Long.valueOf(subdepId);
+                model.addAttribute("namaSubDepartemenSelected", subDepartemenService.findById(lSubdepId).orElseThrow().getSubdepName());
+            }
+        }
+        
+        List<MasterKaryawanDto> listMasterKaryawan = masterKaryawanService.getListMasterKaryawan(lNik, lIdDepartemen, lSubdepId, tglMulaiKerja, namaLengkap);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Karyawan");
+
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("NIK");
+        headerRow.createCell(1).setCellValue("Nama Lengkap");
+        headerRow.createCell(2).setCellValue("Tanggal Mulai Kerja");
+        headerRow.createCell(3).setCellValue("Departemen");
+        headerRow.createCell(4).setCellValue("Sub Departemen");
+
+        int rowCount = 1;
+        for (MasterKaryawanDto k : listMasterKaryawan) {
+            Row row = sheet.createRow(rowCount++);
+            row.createCell(0).setCellValue(k.getNik());
+            row.createCell(1).setCellValue(k.getNamaLengkap());
+            row.createCell(2).setCellValue(k.getTglMulaiKerja());
+            row.createCell(3).setCellValue(k.getNamaDepartemen());
+            row.createCell(4).setCellValue(k.getSubdepName());
+        }
+
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }
