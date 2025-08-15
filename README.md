@@ -1,7 +1,7 @@
 # mepro-crud-demo
 
 ## Deskripsi
-**mepro-crud-demo** adalah proyek demo CRUD yang digunakan sebagai materi pembelajaran fundamental di lingkungan perusahaan **Mepro**.  
+**mepro-crud-demo** adalah proyek demo CRUD yang digunakan sebagai materi pembelajaran fundamental springboot di lingkungan perusahaan **Mepro**.  
 Proyek ini menggunakan contoh kasus nyata yang diadaptasi dari proses bisnis internal, sehingga dapat menjadi acuan bagi pengembang baru maupun tim pengembang yang ingin memahami alur pengembangan aplikasi berbasis Spring Boot.
 
 ## Teknologi yang Digunakan
