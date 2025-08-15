@@ -7,7 +7,7 @@ Proyek ini menggunakan contoh kasus nyata yang diadaptasi dari proses bisnis int
 ## Teknologi yang Digunakan
 - **Java** (Spring Boot)
 - **Thymeleaf** (Template Engine)
-- **Admilte** (Frontend Template)
+- **Adminlte** (Frontend Template)
 - **Oracle Database**
 - **Hibernate & JPA** (Object Relational Mapping)
 - **Maven**
