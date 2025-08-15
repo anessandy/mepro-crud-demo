@@ -10,7 +10,7 @@ Proyek ini menggunakan contoh kasus nyata yang diadaptasi dari proses bisnis int
 - **Admilte** (Frontend Template)
 - **Oracle Database**
 - **Hibernate & JPA** (Object Relational Mapping)
-- **Maven
+- **Maven**
 
 ## Tujuan
 - Menyediakan referensi CRUD sederhana namun lengkap untuk internal perusahaan.
