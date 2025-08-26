@@ -15,17 +15,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MasterKaryawanServiceImpl implements MasterKaryawanService {
-    private static final Logger logger = LoggerFactory.getLogger(SubDepartemenServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(MasterKaryawanServiceImpl.class);
     
     @Autowired
-    private MasterKaryawanRepository MasterKaryawanRepository;
+    private MasterKaryawanRepository masterKaryawanRepository;
     
     @Autowired
     private MasterKaryawanDao masterKaryawanDao;
     
     @Override
     public Optional<MasterKaryawan> findById(Long id) {
-        return MasterKaryawanRepository.findById(id);
+        return masterKaryawanRepository.findById(id);
     }
     
     @Override
