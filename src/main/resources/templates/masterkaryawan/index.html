@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2/css/select2.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/daterangepicker/daterangepicker.css}">
-        <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">-->
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
+    <head th:replace="fragments/head :: head-resources">
     </head>
     <body>
 
@@ -80,15 +72,7 @@
             </div>
         </div>
         
-        <script th:src="@{/adminlte/plugins/jquery/jquery.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/moment/moment.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/select2/js/select2.full.min.js}"></script>
-        <!--<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>-->
-        <script th:src="@{/adminlte/plugins/datatables/jquery.dataTables.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/daterangepicker/daterangepicker.js}"></script>
-        
+        <div th:replace="fragments/scripts :: script-resources"></div>
         <script th:inline="javascript">
             let baseSubdepUrl = /*[[@{/masterkaryawan/getSubdepByDepartemen/}]]*/;
             $(document).ready(function () {

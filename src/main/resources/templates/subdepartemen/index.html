@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
+    <head th:replace="fragments/head :: head-resources">
          <title>DemoCrud</title>
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2/css/select2.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
     </head>
     <body>
 
@@ -65,11 +61,7 @@
                 </div>
             </div>
         </div>
-        
-        <script th:src="@{/adminlte/plugins/jquery/jquery.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-        <script th:src="@{/adminlte/plugins/select2/js/select2.full.min.js}"></script>
-        
+        <div th:replace="fragments/scripts :: script-resources"></div>
         <script th:inline="javascript">
             $(document).ready(function () {
                 $('#departemenSelect').select2({

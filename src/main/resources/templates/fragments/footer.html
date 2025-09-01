@@ -1,4 +1,29 @@
 <footer class="main-footer text-center" th:fragment="footer">
     <strong>Copyright © 2025 <a href="#">DemoApp</a>.</strong>
     All rights reserved.
+    <script th:src="@{/adminlte/plugins/jquery/jquery.min.js}"></script>
+    <script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/adminlte/js/adminlte.min.js}"></script>
+
+    <!-- Script dark/light toggle -->
+    <script th:inline="javascript">
+        $(function () {
+            if (localStorage.getItem("theme") === "dark") {
+                $('body').addClass('dark-mode');
+                $('#toggle-dark i').removeClass('fa-moon').addClass('fa-sun');
+            }
+
+            $('#toggle-dark').on('click', function (e) {
+                e.preventDefault();
+                $('body').toggleClass('dark-mode');
+                if ($('body').hasClass('dark-mode')) {
+                    localStorage.setItem("theme", "dark");
+                    $('#toggle-dark i').removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    localStorage.setItem("theme", "light");
+                    $('#toggle-dark i').removeClass('fa-sun').addClass('fa-moon');
+                }
+            });
+        });
+    </script>
 </footer>

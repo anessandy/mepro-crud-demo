@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
+    <head th:replace="fragments/head :: head-resources">
         <title>DemoCrud</title>
-        <link rel="stylesheet" th:href="@{/adminlte/css/adminlte.min.css}">
-        <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}">
     </head>
     <body>
 
