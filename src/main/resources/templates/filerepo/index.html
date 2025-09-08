@@ -40,6 +40,9 @@
                                     <td>
 <!--                                        th:href="@{'/departemen/edit?id=' + ${d.idDepartemen}}"-->
                                         <a th:href="@{/filerepo/download/{id}(id=${r.idFileRepo})}" class="btn btn-sm btn-success">Download</a>
+                                        <form th:action="@{/filerepo/sendEmail/{id}(id=${r.idFileRepo})}" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-primary">Send Email</button>
+                                        </form>
                                     </td>
                                 </tr>
                             </tbody>

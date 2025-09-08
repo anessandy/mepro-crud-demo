@@ -1,4 +1,14 @@
 spring:
+  mail:
+    host: meprofarm.ho
+    port: 587
+    username: noreply@meprofarm.ho
+    password: mepro789
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.trust: meprofarm.ho
+  
   datasource:
     url: "jdbc:oracle:thin:@192.168.50.6:1521:otmpf"
     username: hrd_mepro
@@ -25,6 +35,9 @@ spring:
   web:
     resources:
       add-mappings: true
+  
+  
+    
   
 server:
   tomcat:
@@ -55,3 +68,4 @@ management:
 
 file:
   upload-dir: uploads
+

@@ -3,6 +3,7 @@ package com.mepro.democrud.controller;
 import com.mepro.democrud.dto.FileRepoDto;
 import com.mepro.democrud.entity.FileRepo;
 import com.mepro.democrud.service.FileRepoService;
+import com.mepro.democrud.service.MailerService;
 import com.mepro.democrud.types.ActiveStatus;
 import java.io.IOException;
 import java.io.Serializable;
@@ -34,6 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/filerepo")
 public class FileRepoController implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(FileRepoController.class);
+    
+    @Autowired
+    private MailerService mailerService;
     
     @Autowired
     private FileRepoService fileRepoService;
@@ -103,5 +107,24 @@ public class FileRepoController implements Serializable {
             .header(HttpHeaders.CONTENT_DISPOSITION, 
                     "attachment; filename=\"" + fileData.getFileName()+ "\"")
             .body(resource);
+    }
+    
+    @PostMapping("/sendEmail/{id}")
+    public String sendEmail(@PathVariable Long id) {
+        try {
+            FileRepo filerepo = fileRepoService.findById(id).orElseThrow(() -> new RuntimeException("File tidak ditemukan"));
+            mailerService.sendFileByEmail(
+                    "yohanes.andy@meprofarm.ho", 
+                    "[TEST] EMAIL SPRING", 
+                    "Testing email with Spring", 
+                    uploadDir, 
+                    String.valueOf(filerepo.getIdFileRepo() + "." + filerepo.getFileExt()), 
+                    filerepo.getFileName());
+            return "redirect:/filerepo/index"; 
+        } 
+        catch (Exception e) {
+            logger.error("sendEmail : "+e.getMessage());
+            return "redirect:/filerepo/index"; 
+        }
     }
 }
