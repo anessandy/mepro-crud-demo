@@ -1,0 +1,89 @@
+spring:
+  mail:
+    host: meprofarm.ho
+    port: 587
+    username: noreply@meprofarm.ho
+    password: ${MAIL_PASSWORD} # gunakan environment variable
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.trust: meprofarm.ho
+  
+  datasource:
+    url: jdbc:oracle:thin:@192.168.50.6:1521:otmpf
+    username: ${DB_USERNAME} # gunakan environment variable
+    password: ${DB_PASSWORD} # gunakan environment variable
+    hikari:
+      maximum-pool-size: 20        # sedikit lebih besar untuk production
+      minimum-idle: 5              # agar lebih responsif
+      idle-timeout: 60000          # 1 menit
+      max-lifetime: 1800000        # 30 menit
+      connection-timeout: 30000
+      pool-name: MyHikariPool
+
+  jpa:
+    show-sql: false                 # jangan tampilkan SQL di production
+    hibernate:
+      ddl-auto: none                # jangan auto update schema di production
+    database-platform: org.hibernate.dialect.OracleDialect
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          batch_size: 30            # optimasi insert/update batch
+        order_inserts: true
+        order_updates: true
+
+  thymeleaf:
+    cache: true                     # aktifkan cache di production
+    prefix: classpath:/templates/
+    mode: HTML
+
+  web:
+    resources:
+      cache:
+        period: PT60M               # cache static resources selama 1 jam
+      add-mappings: true
+
+server:
+  port: 8080
+  tomcat:
+    threads:
+      min-spare: 20
+      max: 300                      # naikkan thread pool
+    accept-count: 200
+    max-connections: 20000          # untuk banyak koneksi
+  connection-timeout: 10s
+  servlet:
+    context-path: /appDemo
+    session:
+      timeout: 30m
+  compression:                      # aktifkan compression
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    com.zaxxer.hikari: WARN         # jangan terlalu detail di production
+  file:
+    name: logs/appDemo.log          # arahkan ke file log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,threaddump,heapdump,env,logfile
+  endpoint:
+    health:
+      show-details: when_authorized # lebih aman
+  health:
+    mail:
+      enabled: true
+    db:
+      enabled: true
+
+file:
+  upload-dir: /var/app/uploads      # pakai absolute path di production
